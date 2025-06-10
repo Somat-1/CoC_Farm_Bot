@@ -1,10 +1,26 @@
 import os
 import time
 import cv2
+import subprocess
+import shutil
+import sys
 
-# Configuration
-ADB_DEVICE = "emulator-5554"
-ADB_PATH = "/Users/tomasvalentinas/Downloads/platform-tools/adb"
+# Automatically locate adb
+ADB_PATH = shutil.which("adb") or "/Users/tomasvalentinas/Downloads/platform-tools/adb"
+
+# Verify ADB is available
+try:
+    output = subprocess.check_output([ADB_PATH, "devices"]).decode()
+    lines = output.strip().split("\n")[1:]  # Skip "List of devices attached"
+    connected = [line.split()[0] for line in lines if "device" in line]
+    if not connected:
+        print("[-] No ADB device found. Please connect or start an emulator.")
+        sys.exit(1)
+    ADB_DEVICE = connected[0]  # Pick the first connected device
+    print(f"[+] Using ADB device: {ADB_DEVICE}")
+except Exception as e:
+    print(f"[-] Failed to detect ADB device: {e}")
+    sys.exit(1)
 
 def take_screenshot(output_path="screen.png", retries=3, delay=0.5):
     for attempt in range(retries):
