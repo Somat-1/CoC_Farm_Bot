@@ -127,15 +127,14 @@ def extract_loot_values(image_path):
     print(f"[OCR] Parsed Loot: Gold={loot['gold']}, Elixir={loot['elixir']}, Dark={loot['dark']}")
     return loot['gold'], loot['elixir'], loot['dark']
 
-# ========== TROOP DEPLOYMENT ==========
 def deploy_troops():
     print("[*] Deploying troops...")
     troop_icons = [
-        (210, 920), (460, 920), (570, 920),
-        (680, 920), (780, 920), (340, 920)
+        (310, 920), (560, 920), (670, 920),
+        (780, 920), (880, 920), (440, 920)
     ]
-    deploy_1 = (1426, 450)
-    deploy_2 = (170, 460)
+    deploy_1 = (1526, 450)
+    deploy_2 = (180, 480)
 
     # Deploy troop 1
     tap(*troop_icons[0]); sleep(0.1)
@@ -146,10 +145,8 @@ def deploy_troops():
     tap(*random_point(deploy_1, 5)); sleep(0.1)
 
     # Deploy troop 2 twice
-    tap(*troop_icons[1])
-    tap(*random_point(deploy_1, 5)); sleep(5)
-    tap(*troop_icons[1])
-    tap(*random_point(deploy_1, 5))
+    tap(*troop_icons[1]); tap(*random_point(deploy_1, 5)); sleep(5)
+    tap(*troop_icons[1]); tap(*random_point(deploy_1, 5))
 
     # Deploy troops 3–5 in pairs at deploy_2
     for troop in troop_icons[2:5]:
@@ -159,15 +156,17 @@ def deploy_troops():
 
     print("[+] Troops deployed.")
 
+    # --- final troop: at original (210, 920), hold on deploy_1 for 1s
+    tap(210, 920); sleep(0.1)
+    tap_and_hold(*random_point(deploy_1, 5), duration_ms=2000)
+
     # === SPELL DEPLOYMENT ===
     print("[*] Deploying spells...")
-    spell_button = (925, 925)
+    spell_button = (1025, 925)
     spell_drops = [
-        (800, 350),
-        (800, 480),
-        (800, 600),
-        (930, 480),
-        (700, 480)
+        (900, 350), (900, 480),
+        (900, 600), (1030, 480),
+        (800, 480)
     ]
 
     tap(*spell_button)
@@ -175,10 +174,12 @@ def deploy_troops():
         tap(*random_point(loc, 15))
 
     print("[+] Spells deployed.")
+
+
 # ========== MAIN LOOP ==========
 
 start_time = time.time()
-TIMEOUT_SECONDS = 100 * 60  # 100 minutes
+TIMEOUT_SECONDS = 60 * 60  # 60 minutes
 zero_loot_count = 0  # Track persistent consecutive zero loot readings
 
 while True:
