@@ -6,7 +6,7 @@ import shutil
 import sys
 
 # Automatically locate adb
-ADB_PATH = shutil.which("adb") or "/Users/tomasvalentinas/Downloads/platform-tools/adb"
+ADB_PATH = shutil.which("adb") 
 
 # Verify ADB is available
 try:
